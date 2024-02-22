@@ -6,5 +6,5 @@ Feature: Login
         And I enter "whatever@mail.com" into Email input field
         And I enter "Qwer1234" into Password input field
         And I click the Sign In button
-        Then I see the welcome message "Welcome, TesterUser TesterLastname"
+        Then I see the welcome message "Welcome, TestUser TesterLastname!"
         And My Account page contains email "whatever@mail.com"

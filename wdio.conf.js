@@ -1,3 +1,5 @@
+import { browser } from '@wdio/globals';
+
 export const config = {
     //
     // ====================
@@ -100,8 +102,8 @@ export const config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['visual'],
-
+    // services: [],
+    //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
     // see also: https://webdriver.io/docs/frameworks
@@ -123,12 +125,15 @@ export const config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: [['allure', {outputDir: 'allure-results'}]],
+    reporters: ['spec',['allure', {
+        outputDir: 'allure-results',
+        useCucumberStepReporter: true
+    }]],
 
     // If you are using Cucumber you need to specify the location of your step definitions.
     cucumberOpts: {
         // <string[]> (file/dir) require files before executing features
-        require: ['./features/step-definitions/steps.js'],
+        require: ['./features/step-definitions/*.js'],
         // <boolean> show full backtrace for errors
         backtrace: false,
         // <string[]> ("extension:module") require files with the given EXTENSION after requiring MODULE (repeatable)
@@ -252,8 +257,11 @@ export const config = {
      * @param {number}             result.duration  duration of scenario in milliseconds
      * @param {object}             context          Cucumber World object
      */
-    // afterStep: function (step, scenario, result, context) {
-    // },
+    afterStep: async function (step, scenario, result, context) {
+        if (result.error) {
+            await browser.takeScreenshot();
+        }
+    },
     /**
      *
      * Runs after a Cucumber Scenario.
